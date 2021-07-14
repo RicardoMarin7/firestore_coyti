@@ -1,0 +1,21 @@
+{
+  "name": "firestore_coyti",
+  "version": "1.0.0",
+  "description": "Aplicacion de servidor para operar mybusiness con firestore",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "Ricardo Marin",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "firebase": "^8.7.1",
+    "rest-mssql-nodejs": "^1.0.10"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
