@@ -12,23 +12,20 @@ const uploadUsers = async () =>{
         const data = users.data[0]
 
         for( const user of data){
-            await firestore.collection('Usuarios').doc(user.usuario).set({
-                user: user.usuario,
+            // const password = user.clave.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+            await firestore.collection('Usuarios').doc(user.usuario.toUpperCase()).set({
+                user: user.usuario.toUpperCase(),
                 name: user.nombre,
                 password: user.clave,
                 supervisor: user.supervisor === 1 ? true : false
             }, { merge: true})
 
-            console.log('Usuarios actualizados con éxito')
+            console.log('Usuario actualizado:', user.usuario)
         }
 
     } catch (error) {
         console.log(error)
     }
-}
-
-const decryptUserPassword = () => {
-
 }
 
 const getUsers = async () =>{
