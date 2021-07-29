@@ -2,6 +2,7 @@ const firebase = require('../utils/db')
 const User = require('../models/user')
 const firestore = firebase.firestore()
 const SQL = require('../utils/SQL')
+const log = require('../utils/log')
 
 const uploadUsers = async () =>{
     try {
@@ -25,6 +26,7 @@ const uploadUsers = async () =>{
 
     } catch (error) {
         console.log(error)
+        log.write('users', error)
     }
 }
 
@@ -37,6 +39,7 @@ const getUsers = async () =>{
         })
     } catch (error) {
         console.log(error);
+        log.write('users', error)
     }
 }
 

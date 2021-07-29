@@ -1,8 +1,9 @@
 const express = require('express')
 const config = require('./utils/config')
-const SQL = require('./utils/SQL')
 const app = express()
 const userController = require('./controllers/userController')
+const productController = require('./controllers/productsController')
+const linesController = require('./controllers/linesController')
 
 app.use(express.json())
 
@@ -16,4 +17,14 @@ app.get('/users', (req, res) =>{
 app.get('/uploadUsers', (req, res) =>{
     userController.uploadUsers()
     res.send('Users')
+})
+
+app.get('/uploadProds', async (req, res) =>{
+    const data = await productController.uploadModifiedProducts()
+    res.send(data)
+})
+
+app.get('/uploadLines', async (req, res) =>{
+    const data = await linesController.uploadAllLines()
+    res.send(data)
 })
