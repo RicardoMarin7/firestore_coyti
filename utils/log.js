@@ -5,7 +5,6 @@ const write = (type,error) =>{
     const date = new Date()
     // const today = `${date.getDay()}-${date.getMonth()}${date.getFullYear()}`
     const today = new Date().toLocaleDateString('en-CA')
-    console.log(today)
     const hour = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
     try {
         fs.appendFileSync(`./logs/${type}${today}`, `\n${hour} ${error}`)

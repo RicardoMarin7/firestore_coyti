@@ -3,9 +3,9 @@ const firestore = firebase.firestore()
 const SQL = require('../utils/SQL')
 const log = require('../utils/log')
 
-const uploadAllLines = async () =>{
+const uploadLines = async () =>{
     try {
-        const data = await SQL.executeQuery(`SELECT linea as 'line', descrip as 'description' FROM lineas`)
+        const data = await SQL.executeQuery(`SELECT linea as 'line', descrip as 'description', firestore FROM lineas WHERE firestore = 0`)
         if(data.error) throw data.errorDetail
         const lines = data.data[0]        
         
@@ -24,5 +24,5 @@ const uploadAllLines = async () =>{
 }
 
 module.exports = {
-    uploadAllLines
+    uploadLines
 }

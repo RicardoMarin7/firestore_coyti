@@ -6,7 +6,7 @@ const log = require('../utils/log')
 
 const uploadUsers = async () =>{
     try {
-        const users = await SQL.executeQuery('SELECT usuario, nombre, clave, supervisor FROM USUARIOS')
+        const users = await SQL.executeQuery('SELECT usuario, nombre, clave, supervisor, firestore FROM USUARIOS WHERE firestore = 0')
         if(users.error){
             throw users.errorDetail
         }

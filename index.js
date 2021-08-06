@@ -28,3 +28,9 @@ app.get('/uploadLines', async (req, res) =>{
     const data = await linesController.uploadAllLines()
     res.send(data)
 })
+
+app.get('/downloadProducts', async (req, res) =>{
+    const data = await productController.downloadModifiedProducts()
+    res.send(data)
+})
+
