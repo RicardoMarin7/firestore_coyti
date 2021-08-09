@@ -3,9 +3,9 @@ const firestore = firebase.firestore()
 const SQL = require('../utils/SQL')
 const log = require('../utils/log')
 
-const uploadAllProducts = async () =>{
+const uploadProducts = async () =>{
     try {
-        const products = await SQL.executeQuery(`SELECT articulo as 'code', costo_u as 'cost', descrip as 'description', linea as 'line', precio1 as 'price', impuesto as 'tax' FROM prods` )
+        const products = await SQL.executeQuery(`SELECT articulo as 'code', costo_u as 'cost', descrip as 'description', linea as 'line', precio1 as 'price', impuesto as 'tax' FROM prods WHERE firestore = 0` )
         if(products.error) throw products.errorDetail
         const data = products.data[0]        
         
@@ -177,7 +177,7 @@ const round = (value, decimals) =>  {
 
 
 module.exports = {
-    uploadAllProducts,
+    uploadProducts,
     uploadModifiedProducts,
     downloadModifiedProducts
 }
