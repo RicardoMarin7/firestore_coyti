@@ -5,30 +5,56 @@ const log = require('../utils/log')
 
 const uploadProducts = async () =>{
     try {
+
         const products = await SQL.executeQuery(`SELECT articulo as 'code', costo_u as 'cost', descrip as 'description', linea as 'line', precio1 as 'price', impuesto as 'tax' FROM prods WHERE firestore = 0` )
         if(products.error) throw products.errorDetail
-        const data = products.data[0]        
+        const data = products.data[0]   
         
+        if(data.length === 0){
+            log.write('products', 'No hay articulos para subir')
+            return 'No hay articulos para subir'
+        }
+
+        const devices = await firestore.collection('Dispositivos').get()
+        devices.forEach( async (deviceData) => {
+            const device = deviceData.data()
+            for( const product of data){
+                console.log(`Cargando Producto ${product.code} ${product.description}`);
+                await firestore.collection(`Productos${device.id}`).doc(product.code.toUpperCase()).set({
+                    code: product.code.toUpperCase(),
+                    cost: product.cost,
+                    description: product.description,
+                    line: product.line,
+                    price: product.price,
+                    tax: product.tax,
+                    app: false,
+                    server: true
+                })
+
+                const updateProduct = await SQL.executeQuery(`UPDATE prods SET firestore = 1 WHERE articulo = '${product.code}'`)
+                if(updateProduct.error) throw updateProduct.errorDetail
+                console.log(`Producto Cargado ${product.code} ${product.description}`);
+            }
+        })
+
+
         for( const product of data){
             console.log(`Cargando Producto ${product.code} ${product.description}`);
-            await firestore.collection('Productos').doc(product.code.toUpperCase()).set({
+            await firestore.collection(`Productos`).doc(product.code.toUpperCase()).set({
+                ...product,
                 code: product.code.toUpperCase(),
-                cost: product.cost,
-                description: product.description,
-                line: product.line,
-                price: product.price,
-                tax: product.tax,
                 app: false,
                 server: true
             })
-            console.log(`Producto Cargado ${product.code} ${product.description}`);
         }
+
         return data
     } catch (error) {
         console.log('Error:', error)
         log.write('products', error)
     }
 }
+
 
 const uploadModifiedProducts = async () => {
     try {

@@ -20,7 +20,7 @@ app.get('/uploadUsers', (req, res) =>{
 })
 
 app.get('/uploadProds', async (req, res) =>{
-    const data = await productController.uploadModifiedProducts()
+    const data = await productController.uploadProducts()
     res.send(data)
 })
 
