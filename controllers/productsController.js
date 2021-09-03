@@ -152,20 +152,29 @@ const articleTypes = product => {
         {name:'costo', type:'float', value: round(product.cost / (1 + (taxValue/100)), 4)},
         {name:'precio', type:'float', value: round(product.price / (1 + (taxValue/100)), 4)},
         {name:'paraventa', type:'bit', value: 1},
+        {name:'invent', type:'bit', value: 1},
     ]
 }
+
+const warehouseTypes = product => ([
+    {name:'ALMACEN', type:'int', value: product.warehouse},
+    {name:'ARTICULO', type:'varchar', value: product.code},
+    {name:'EXISTENCIA', type:'int', value: 0},
+])
 const insertArticleSQL = async product => {
     try {
-        const query = await SQL.executeQuery(`INSERT INTO prods (articulo, descrip, linea, marca, unidad, impuesto, costo_u, precio1, paraventa) 
-        VALUES (@articulo, @descrip, @linea, @marca, @unidad, @impuesto, @costo, @precio, @paraventa)`, articleTypes(product))
+        const query = await SQL.executeQuery(`INSERT INTO prods (articulo, descrip, linea, marca, unidad, impuesto, costo_u, precio1, paraventa, invent) 
+        VALUES (@articulo, @descrip, @linea, @marca, @unidad, @impuesto, @costo, @precio, @paraventa, @invent)`, articleTypes(product))
 
-        if(!query.error){
-            await firestore.collection('Productos').doc(product.code).set({
-                server: true
-            }, {merge: true})
-        }
-        
-        if(query.error) throw query.errorDetail
+        if(query.error) throw query.errorDetail //Salimos si hay error
+
+        await firestore.collection('Productos').doc(product.code).set({
+            server: true
+        }, {merge: true})
+
+        const warehouse = await SQL.executeQuery(`INSERT INTO existenciaalmacen VALUES (@ALMACEN, @ARTICULO, @EXISTENCIA)`, warehouseTypes({...product, warehouse: 1}))
+        const warehouse2 = await SQL.executeQuery(`INSERT INTO existenciaalmacen VALUES (@ALMACEN, @ARTICULO, @EXISTENCIA)`, warehouseTypes({...product, warehouse: 2}))
+
     } catch (error) {
         console.log(error)
         log.write('products', error)
@@ -181,7 +190,8 @@ const updateArticleSQL = async product =>{
         unidad = @unidad, 
         impuesto = @impuesto, 
         costo = @costo, 
-        precio1 = @precio, 
+        precio1 = @precio,
+        invent = @invent,  
         paraventa = @paraventa WHERE articulo = '${product.code}'`, articleTypes(product))
 
         if(!query.error){
@@ -189,6 +199,9 @@ const updateArticleSQL = async product =>{
                 server: true
             }, {merge: true})
         }
+
+        const warehouse = await SQL.executeQuery(`INSERT INTO existenciaalmacen VALUES (@ALMACEN, @ARTICULO, @EXISTENCIA)`, warehouseTypes({...product, warehouse: 1}))
+        const warehouse2 = await SQL.executeQuery(`INSERT INTO existenciaalmacen VALUES (@ALMACEN, @ARTICULO, @EXISTENCIA)`, warehouseTypes({...product, warehouse: 2}))
         
         if(query.error) throw query.errorDetail
     } catch (error) {

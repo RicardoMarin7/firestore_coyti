@@ -36,6 +36,7 @@ app.get('/downloadProducts', async (req, res) =>{
 })
 
 app.get('/downloadEntries', async (req,res) =>{
+    const products = await productController.downloadModifiedProducts()
     const data = await entriesController.downloadEntries()
     res.send(data)
 })
