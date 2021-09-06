@@ -5,6 +5,7 @@ const userController = require('./controllers/userController')
 const productController = require('./controllers/productsController')
 const linesController = require('./controllers/linesController')
 const entriesController = require('./controllers/entriesController')
+const exitsController = require('./controllers/exitsController')
 
 app.use(express.json())
 
@@ -38,5 +39,11 @@ app.get('/downloadProducts', async (req, res) =>{
 app.get('/downloadEntries', async (req,res) =>{
     const products = await productController.downloadModifiedProducts()
     const data = await entriesController.downloadEntries()
+    res.send(data)
+})
+
+app.get('/downloadExits', async (req,res) =>{
+    const products = await productController.downloadModifiedProducts()
+    const data = await exitsController.downloadExits()
     res.send(data)
 })

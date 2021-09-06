@@ -2,7 +2,6 @@ const firebase = require('../utils/db')
 const firestore = firebase.firestore()
 const SQL = require('../utils/SQL')
 const log = require('../utils/log')
-const sqlRest = require('rest-mssql-nodejs')
 
 const entryTypes = (entry, folio) =>{
     const date = new Date()
