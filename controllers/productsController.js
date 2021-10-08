@@ -6,7 +6,14 @@ const log = require('../utils/log')
 const uploadProducts = async () =>{
     try {
 
-        const products = await SQL.executeQuery(`SELECT articulo as 'code', costo_u as 'cost', descrip as 'description', linea as 'line', precio1 as 'price', impuesto as 'tax' FROM prods WHERE firestore = 0` )
+        const products = await SQL.executeQuery(`
+        SELECT DISTINCT prods.articulo as 'code', costo_u as 'cost', 
+        descrip as 'description', linea as 'line', precio1 as 'price', impuesto as 'tax',
+        (select existencia from existenciaalmacen where almacen = 1 and articulo = prods.articulo) as 'warehouse1',
+        (select existencia from existenciaalmacen where almacen = 2 and articulo = prods.articulo) as 'warehouse2'
+        FROM prods
+        WHERE firestore = 0` )
+
         if(products.error) throw products.errorDetail
         const data = products.data[0]   
         
@@ -27,6 +34,8 @@ const uploadProducts = async () =>{
                     line: product.line,
                     price: product.price,
                     tax: product.tax,
+                    warehouse1: product.warehouse1 ? product.warehouse1 : 0,
+                    warehouse2: product.warehouse2 ? product.warehouse2 : 0,
                     app: false,
                     server: true
                 })
@@ -43,6 +52,8 @@ const uploadProducts = async () =>{
             await firestore.collection(`Productos`).doc(product.code.toUpperCase()).set({
                 ...product,
                 code: product.code.toUpperCase(),
+                warehouse1: product.warehouse1 ? product.warehouse1 : 0,
+                warehouse2: product.warehouse2 ? product.warehouse2 : 0,
                 app: false,
                 server: true
             })
