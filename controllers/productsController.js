@@ -228,6 +228,5 @@ const round = (value, decimals) =>  {
 
 module.exports = {
     uploadProducts,
-    uploadModifiedProducts,
     downloadModifiedProducts
 }

@@ -8,55 +8,65 @@ const entriesController = require('./controllers/entriesController')
 const exitsController = require('./controllers/exitsController')
 const providersController = require('./controllers/providersController')
 const purchasesController = require('./controllers/purchasesController')
+const log = require('../utils/log')
+
 
 app.use(express.json())
 
 app.listen(config.port, () => console.log(`App listening on ${config.url} Port: ${config.port}`))
 
-app.get('/users', (req, res) =>{
-    userController.getUsers()
-    res.send('Users')
-})
 
-app.get('/uploadUsers', (req, res) =>{
-    userController.uploadUsers()
-    res.send('Users')
-})
+const cronUsers = async () =>{
+    await userController.uploadUsers()
+}
 
-app.get('/uploadProds', async (req, res) =>{
-    const data = await productController.uploadProducts()
-    res.send(data)
-})
 
-app.get('/uploadLines', async (req, res) =>{
-    const data = await linesController.uploadAllLines()
-    res.send(data)
-})
+const cronProducts = async () =>{
+    await productController.uploadProducts()
+    await productController.downloadModifiedProducts()
+}
 
-app.get('/downloadProducts', async (req, res) =>{
-    const data = await productController.downloadModifiedProducts()
-    res.send(data)
-})
+const cronLines = async () =>{
+    await linesController.uploadAllLines()
+}
 
-app.get('/downloadEntries', async (req,res) =>{
-    const products = await productController.downloadModifiedProducts()
-    const data = await entriesController.downloadEntries()
-    res.send(data)
-})
+const cronEntries = async () =>{
+    await productController.downloadModifiedProducts()
+    await entriesController.downloadEntries()
+}
 
-app.get('/downloadExits', async (req,res) =>{
-    const products = await productController.downloadModifiedProducts()
-    const data = await exitsController.downloadExits()
-    res.send(data)
-})
 
-app.get('/uploadProviders', async (req,res) =>{
-    const data = await providersController.uploadProviders()
-    res.send(data)
-})
+const cronExits = async () =>{
+    await productController.downloadModifiedProducts()
+    await exitsController.downloadExits()
+}
 
-app.get('/downloadPurchases', async (req,res) =>{
-    const products = await productController.downloadModifiedProducts()
-    const data = await purchasesController.downloadPurchases()
-    res.send(data)
-})
+const cronProviders =  async () =>{
+    await providersController.uploadProviders()
+}
+
+const cronPurchases =  async () =>{
+    await productController.downloadModifiedProducts()
+    purchasesController.downloadPurchases()
+}
+
+const initialUpload = async () =>{
+    await userController.uploadUsers()
+    await linesController.uploadLines()
+    await providersController.uploadProviders()
+    await productController.uploadProducts()
+}
+
+const minutes = 10, interval = minutes * 60 * 1000
+
+setInterval( async () =>{
+    log.write('Cron',`Every ${minutes} seconds`)
+    await cronUsers()
+    await cronProviders()
+    await cronLines()
+    await cronProducts()
+    await cronEntries()
+    await cronExits()
+    await cronPurchases()
+
+}, interval)
