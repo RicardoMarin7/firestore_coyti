@@ -8,7 +8,7 @@ const entriesController = require('./controllers/entriesController')
 const exitsController = require('./controllers/exitsController')
 const providersController = require('./controllers/providersController')
 const purchasesController = require('./controllers/purchasesController')
-const log = require('../utils/log')
+const log = require('./utils/log')
 
 
 app.use(express.json())
