@@ -26,10 +26,7 @@ const uploadProviders = async () =>{
                     name: provider.name,
                     app:false
                 }, { merge: true})
-    
-                const updateProvider = await SQL.executeQuery(`UPDATE proveed SET firestore = 1 WHERE proveedor = '${provider.id}'`)
-                if(updateProvider.error) throw updateProvider.errorDetail
-                console.log(`Proveedor Cargado con éxito ${provider.id} ${provider.name} al dispositivo ${device.id}`);
+
             }
         })
 
@@ -39,6 +36,9 @@ const uploadProviders = async () =>{
                 name: provider.name,
             }, { merge: true})
 
+            const updateProvider = await SQL.executeQuery(`UPDATE proveed SET firestore = 1 WHERE proveedor = '${provider.id}'`)
+            if(updateProvider.error) throw updateProvider.errorDetail
+            console.log(`Proveedor Cargado con éxito ${provider.id} ${provider.name} al dispositivo ${device.id}`);
             console.log('Proveedor actualizado:', provider.name)
             console.log(`Proveedor Cargado ${provider.id} ${provider.name} al catalogo maestro`);
         }

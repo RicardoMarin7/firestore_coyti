@@ -21,6 +21,7 @@ const uploadUsers = async () =>{
                 supervisor: user.supervisor === 1 ? true : false
             }, { merge: true})
 
+            const userUpdate = await SQL.executeQuery(`UPDATE usuarios SET firestore = 1 WHERE usuario = '${user.usuario}'`)
             console.log('Usuario actualizado:', user.usuario)
         }
 

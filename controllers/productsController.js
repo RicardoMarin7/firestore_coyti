@@ -39,9 +39,6 @@ const uploadProducts = async () =>{
                     app: false,
                     server: true
                 })
-
-                const updateProduct = await SQL.executeQuery(`UPDATE prods SET firestore = 1 WHERE articulo = '${product.code}'`)
-                if(updateProduct.error) throw updateProduct.errorDetail
                 console.log(`Producto Cargado ${product.code} ${product.description}`);
             }
         })
@@ -57,6 +54,10 @@ const uploadProducts = async () =>{
                 app: false,
                 server: true
             })
+
+            const updateProduct = await SQL.executeQuery(`UPDATE prods SET firestore = 1 WHERE articulo = '${product.code}'`)
+            console.log(updateProduct)
+            if(updateProduct.error) throw updateProduct.errorDetail
         }
 
         return data
