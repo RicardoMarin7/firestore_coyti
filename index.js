@@ -59,8 +59,21 @@ const initialUpload = async () =>{
 
 const minutes = 10, interval = minutes * 60 * 1000
 
+const firstCron = async () =>{
+    log.write('Cron',`First Cron`)
+    await cronUsers()
+    await cronProviders()
+    await cronLines()
+    await cronProducts()
+    await cronEntries()
+    await cronExits()
+    await cronPurchases()
+}
+
+firstCron()
+
 setInterval( async () =>{
-    log.write('Cron',`Every ${minutes} seconds`)
+    log.write('Cron',`Every ${minutes} minutes`)
     await cronUsers()
     await cronProviders()
     await cronLines()
