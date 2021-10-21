@@ -27,7 +27,7 @@ const cronProducts = async () =>{
 }
 
 const cronLines = async () =>{
-    await linesController.uploadAllLines()
+    await linesController.uploadLines()
 }
 
 const cronEntries = async () =>{
