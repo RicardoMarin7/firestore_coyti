@@ -15,7 +15,7 @@ const uploadLines = async () =>{
                 line: line.line,
                 description: line.description
             })
-            console.log(`Linea cargada ${line.line} ${line.description}`);
+            console.log(`Linea cargada ${line.line} ${line.description}`)
         }
         return lines
     } catch (error) {
