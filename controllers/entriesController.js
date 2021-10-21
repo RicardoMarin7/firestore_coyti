@@ -12,7 +12,7 @@ const entryTypes = (entry, folio) =>{
         {name:'ENTRADA', type:'int', value: folio},
         {name:'OCUPADO', type:'int', value: 0},
         {name:'TIPO_DOC', type:'varchar', value: 'CL+'},
-        {name:'F_EMISION', type:'varchar', value: entry.date},
+        {name:'F_EMISION', type:'varchar', value: todayDate},
         {name:'IMPORTE', type:'float', value: entry.total},
         {name:'COSTO', type:'float', value: 0},
         {name:'ALMACEN', type:'int', value: entry.warehouse},

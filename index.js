@@ -70,7 +70,10 @@ const firstCron = async () =>{
     await cronPurchases()
 }
 
-firstCron()
+setTimeout(
+    () => firstCron()
+    , 5000
+)
 
 setInterval( async () =>{
     log.write('Cron',`Every ${minutes} minutes`)

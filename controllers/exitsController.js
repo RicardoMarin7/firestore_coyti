@@ -11,8 +11,8 @@ const exitTypes = (exit, folio) =>{
     return [
         {name:'SALIDA', type:'int', value: folio},
         {name:'OCUPADO', type:'int', value: 0},
-        {name:'TIPO_DOC', type:'varchar', value: 'CL+'},
-        {name:'F_EMISION', type:'varchar', value: exit.date},
+        {name:'TIPO_DOC', type:'varchar', value: 'CL-'},
+        {name:'F_EMISION', type:'varchar', value: todayDate},
         {name:'IMPORTE', type:'float', value: exit.total},
         {name:'COSTO', type:'float', value: 0},
         {name:'ALMACEN', type:'int', value: exit.warehouse},

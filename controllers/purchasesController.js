@@ -12,7 +12,7 @@ const purchaseTypes = (purchase, folio) =>{
         {name:'COMPRA', type:'int', value: folio},
         {name:'OCUPADO', type:'int', value: 0},
         {name:'TIPO_DOC', type:'varchar', value: 'COM'},
-        {name:'F_EMISION', type:'varchar', value: purchase.date},
+        {name:'F_EMISION', type:'varchar', value: todayDate},
         {name:'PROVEEDOR', type:'varchar', value: purchase.provider},
         {name:'FACTURA', type:'varchar', value: ''},
         {name:'IMPORTE', type:'float', value: purchase.total},
