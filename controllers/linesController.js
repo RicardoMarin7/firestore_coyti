@@ -16,6 +16,10 @@ const uploadLines = async () =>{
                 description: line.description
             })
             console.log(`Linea cargada ${line.line} ${line.description}`)
+
+            const updateline = await SQL.executeQuery(`UPDATE lineas SET firestore = 1 WHERE linea = '${line.line}'`)
+            console.log(updateline)
+            if(updateline.error) throw updateline.errorDetail
         }
         return lines
     } catch (error) {
