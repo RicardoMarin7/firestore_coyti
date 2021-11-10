@@ -7,7 +7,7 @@ const uploadProducts = async () =>{
     try {
 
         const products = await SQL.executeQuery(`
-        SELECT DISTINCT TOP 1 prods.articulo as 'code', costo_u as 'cost', 
+        SELECT DISTINCT TOP 10 prods.articulo as 'code', costo_u as 'cost', 
         descrip as 'description', linea as 'line', precio1 as 'price', impuesto as 'tax',
         (select existencia from existenciaalmacen where almacen = 1 and articulo = prods.articulo) as 'warehouse1',
         (select existencia from existenciaalmacen where almacen = 2 and articulo = prods.articulo) as 'warehouse2'
@@ -49,7 +49,7 @@ const uploadProducts = async () =>{
                     tax: product.tax,
                     warehouse1: product.warehouse1 ? product.warehouse1 : 0,
                     warehouse2: product.warehouse2 ? product.warehouse2 : 0,
-                    additionalCodes: product.additionalCodes,
+                    additionalCodes: product.additionalCodes ? product.additionalCodes : {},
                     app: false,
                     server: true
                 })
