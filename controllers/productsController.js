@@ -7,12 +7,13 @@ const uploadProducts = async () =>{
     try {
 
         const products = await SQL.executeQuery(`
-        SELECT DISTINCT prods.articulo as 'code', costo_u as 'cost', 
+        SELECT DISTINCT TOP 1 prods.articulo as 'code', costo_u as 'cost', 
         descrip as 'description', linea as 'line', precio1 as 'price', impuesto as 'tax',
         (select existencia from existenciaalmacen where almacen = 1 and articulo = prods.articulo) as 'warehouse1',
         (select existencia from existenciaalmacen where almacen = 2 and articulo = prods.articulo) as 'warehouse2'
         FROM prods
         WHERE firestore = 0` )
+        
 
         if(products.error) throw products.errorDetail
         const data = products.data[0]   
@@ -22,10 +23,22 @@ const uploadProducts = async () =>{
             return 'No hay articulos para subir'
         }
 
+        const productsWithAdditionalCodes = []
+
+        for( const product of data){
+            const clavesAdicionales = await SQL.executeQuery(`SELECT clave as 'additionalCode' FROM clavesadd WHERE articulo = '${product.code}' and clave <> '${product.code}'`)
+            
+            if(clavesAdicionales?.data[0].length > 0){
+                productsWithAdditionalCodes.push({...product, additionalCodes: { ...clavesAdicionales.data[0]}})
+            }else{
+                productsWithAdditionalCodes.push({...product})
+            }
+        }
+
         const devices = await firestore.collection('Dispositivos').get()
         devices.forEach( async (deviceData) => {
             const device = deviceData.data()
-            for( const product of data){
+            for( const product of productsWithAdditionalCodes){
                 console.log(`Cargando Producto ${product.code} ${product.description}`);
                 await firestore.collection(`Productos${device.id}`).doc(product.code.toUpperCase()).set({
                     code: product.code.toUpperCase(),
@@ -36,6 +49,7 @@ const uploadProducts = async () =>{
                     tax: product.tax,
                     warehouse1: product.warehouse1 ? product.warehouse1 : 0,
                     warehouse2: product.warehouse2 ? product.warehouse2 : 0,
+                    additionalCodes: product.additionalCodes,
                     app: false,
                     server: true
                 })
