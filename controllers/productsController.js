@@ -58,13 +58,14 @@ const uploadProducts = async () =>{
         })
 
 
-        for( const product of data){
+        for( const product of productsWithAdditionalCodes){
             console.log(`Cargando Producto ${product.code} ${product.description}`);
             await firestore.collection(`Productos`).doc(product.code.toUpperCase()).set({
                 ...product,
                 code: product.code.toUpperCase(),
                 warehouse1: product.warehouse1 ? product.warehouse1 : 0,
                 warehouse2: product.warehouse2 ? product.warehouse2 : 0,
+                additionalCodes: product.additionalCodes ? product.additionalCodes : {},
                 app: false,
                 server: true
             })
